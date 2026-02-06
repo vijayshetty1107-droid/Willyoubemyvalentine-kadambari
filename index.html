@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="theme-color" content="#ffd6e7" />
+  <title>Be My Valentine, Kadambari? 💝</title>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;600;700&display=swap');
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    :root {
+      --primary: #ff3b7a;
+      --primary-dark: #e91e63;
+      --secondary: #ff8fab;
+      --accent: #ffc2d1;
+      --bg-1: #ffd6e7;
+      --bg-2: #ffeef6;
+      --text: #2d2d2d;
+      --white: rgba(255, 255, 255, 0.98);
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      position: fixed;
+      width: 100%;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, var(--bg-1) 0%, var(--bg-2) 50%, var(--accent) 100%);
+      font-family: 'Poppins', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Floating Hearts Background */
+    .hearts-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .floating-heart {
+      position: absolute;
+      color: rgba(255, 59, 122, 0.12);
+      font-size: 20px;
+      animation: float-up 10s infinite ease-in;
+      bottom: -50px;
+      will-change: transform;
+    }
+
+    @keyframes float-up {
+      0% {
+        transform: translateY(0) rotate(0deg) scale(0.6);
+        opacity: 0;
+      }
+      15% {
+        opacity: 0.8;
+      }
+      85% {
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateY(-100vh) rotate(360deg) scale(1);
+        opacity: 0;
+      }
+    }
+
+    /* Main Card */
+    .container {
+      position: relative;
+      z-index: 10;
+      width: 92%;
+      max-width: 400px;
+      max-height: 90vh;
+      padding: 30px 20px;
+      background: var(--white);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 25px;
+      box-shadow: 
+        0 20px 60px rgba(255, 59, 122, 0.25),
+        0 8px 20px rgba(0, 0, 0, 0.08),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+      text-align: center;
+      animation: card-entrance 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    @keyframes card-entrance {
+      from {
+        opacity: 0;
+        transform: scale(0.85) translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    /* Cute Cat GIF */
+    .cat-gif {
+      width: 150px;
+      height: 150px;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(255, 59, 122, 0.3);
+      border: 4px solid white;
+      background: #fff;
+    }
+
+    .cat-gif img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Typography */
+    h1 {
+      font-family: 'Pacifico', cursive;
+      font-size: clamp(1.6rem, 7vw, 2rem);
+      color: var(--primary);
+      margin-bottom: 10px;
+      line-height: 1.3;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.08);
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      color: #777;
+      margin-bottom: 25px;
+      font-weight: 400;
+      line-height: 1.4;
+    }
+
+    /* Button Zone - Mobile Optimized */
+    .button-zone {
+      position: relative;
+      width: 100%;
+      height: 180px;
+      margin: 20px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    button {
+      position: relative;
+      padding: 16px 32px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      font-family: 'Poppins', sans-serif;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+      user-select: none;
+      min-width: 140px;
+      will-change: transform;
+    }
+
+    #yesBtn {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      transform: scale(1);
+      order: 1;
+      z-index: 10;
+    }
+
+    #yesBtn:active {
+      transform: scale(0.95);
+    }
+
+    #noBtn {
+      background: linear-gradient(135deg, #e8e8e8 0%, #f5f5f5 100%);
+      color: #666;
+      order: 2;
+      position: absolute;
+      bottom: 20px;
+    }
+
+    #noBtn.jumping {
+      animation: jump-away 0.4s ease-out;
+    }
+
+    @keyframes jump-away {
+      0% { transform: scale(1) rotate(0deg); }
+      50% { transform: scale(0.9) rotate(10deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+
+    /* Stats */
+    .stats {
+      font-size: 0.85rem;
+      color: #999;
+      margin-top: 15px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      min-height: 20px;
+    }
+
+    .stats.visible {
+      opacity: 1;
+    }
+
+    .attempts {
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    /* Confetti Canvas */
+    #confetti-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    /* Touch hint */
+    .touch-hint {
+      font-size: 0.75rem;
+      color: #bbb;
+      margin-top: 10px;
+      opacity: 0;
+      animation: fade-in 1s 2s forwards;
+    }
+
+    @keyframes fade-in {
+      to { opacity: 1; }
+    }
+
+    /* Prevent text selection */
+    .noselect {
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    /* Start button for audio */
+    .start-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 214, 231, 0.95);
+      z-index: 3000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(10px);
+    }
+
+    .start-btn {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      padding: 20px 50px;
+      border-radius: 50px;
+      font-size: 1.3rem;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 15px 40px rgba(255, 59, 122, 0.4);
+      animation: pulse-btn 2s infinite;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    @keyframes pulse-btn {
+      0%, 100% { transform: scale(1); box-shadow: 0 15px 40px rgba(255, 59, 122, 0.4); }
+      50% { transform: scale(1.05); box-shadow: 0 20px 50px rgba(255, 59, 122, 0.6); }
+    }
+
+    .start-text {
+      font-family: 'Pacifico', cursive;
+      font-size: 2rem;
+      color: var(--primary);
+      margin-bottom: 30px;
+    }
+
+    /* YES Success Screen */
+    .success-screen {
+      display: none;
+      animation: celebrate 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      padding: 10px 0;
+    }
+
+    @keyframes celebrate {
+      from {
+        opacity: 0;
+        transform: scale(0.6) rotate(-3deg);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) rotate(0);
+      }
+    }
+
+    .success-screen h2 {
+      font-family: 'Pacifico', cursive;
+      font-size: clamp(1.8rem, 8vw, 2.2rem);
+      color: var(--primary);
+      margin-bottom: 10px;
+      animation: pulse 1.2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+    }
+
+    .happi-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+
+    .happi-cat {
+      font-size: 80px;
+      animation: bounce-cat 0.6s infinite alternate;
+      display: inline-block;
+      filter: drop-shadow(0 5px 15px rgba(255, 59, 122, 0.3));
+    }
+
+    @keyframes bounce-cat {
+      from { transform: translateY(0) rotate(-5deg); }
+      to { transform: translateY(-15px) rotate(5deg); }
+    }
+
+    .happi-image {
+      width: 120px;
+      height: 120px;
+      border-radius: 20px;
+      object-fit: cover;
+      box-shadow: 0 10px 30px rgba(255, 59, 122, 0.3);
+      border: 4px solid white;
+      animation: bounce-cat 0.6s infinite alternate;
+    }
+
+    .gift-message {
+      font-size: 1.1rem;
+      color: #555;
+      margin-bottom: 25px;
+      font-weight: 500;
+      padding: 0 10px;
+    }
+
+    /* Gift Boxes Container */
+    .gift-boxes {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .gift-box {
+      width: 90px;
+      height: 90px;
+      background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 45px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 10px 25px rgba(196, 69, 105, 0.3);
+      position: relative;
+      overflow: hidden;
+      border: 3px solid white;
+    }
+
+    .gift-box:hover {
+      transform: scale(1.1) rotate(5deg);
+    }
+
+    .gift-box.opened {
+      background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+      animation: box-open 0.6s ease-out;
+    }
+
+    @keyframes box-open {
+      0% { transform: scale(1) rotate(0deg); }
+      50% { transform: scale(1.3) rotate(-10deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+
+    .gift-box.disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      pointer-events: none;
+      filter: grayscale(0.5);
+    }
+
+    .gift-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, transparent 50%);
+      border-radius: 17px;
+    }
+
+    /* Gift Reveal Modal */
+    .gift-reveal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      background: var(--white);
+      padding: 25px;
+      border-radius: 25px;
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+      z-index: 2000;
+      text-align: center;
+      max-width: 360px;
+      width: 90%;
+      animation: gift-popup 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    @keyframes gift-popup {
+      0% {
+        transform: translate(-50%, -50%) scale(0) rotate(-15deg);
+        opacity: 0;
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+        opacity: 1;
+      }
+    }
+
+    .gift-reveal.hide {
+      animation: gift-popup-out 0.3s ease-out forwards;
+    }
+
+    @keyframes gift-popup-out {
+      0% {
+        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(0) rotate(15deg);
+        opacity: 0;
+      }
+    }
+
+    .gift-reveal img {
+      width: 280px;
+      height: 280px;
+      object-fit: cover;
+      border-radius: 20px;
+      margin-bottom: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .gift-reveal h3 {
+      font-family: 'Pacifico', cursive;
+      font-size: 1.6rem;
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+
+    .gift-reveal p {
+      font-size: 1rem;
+      color: #666;
+      line-height: 1.5;
+      padding: 0 10px;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 1999;
+      opacity: 0;
+      animation: fade-overlay 0.3s forwards;
+    }
+
+    @keyframes fade-overlay {
+      to { opacity: 1; }
+    }
+
+    .overlay.hide {
+      animation: fade-overlay-out 0.3s forwards;
+    }
+
+    @keyframes fade-overlay-out {
+      to { opacity: 0; }
+    }
+
+    /* Final Bye Screen */
+    .bye-screen {
+      display: none;
+      animation: celebrate 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      padding: 10px 0;
+    }
+
+    .bye-cat {
+      width: 220px;
+      height: 220px;
+      margin: 0 auto 20px;
+      border-radius: 25px;
+      overflow: hidden;
+      box-shadow: 0 15px 40px rgba(255, 59, 122, 0.3);
+      border: 4px solid white;
+    }
+
+    .bye-cat img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .bye-screen h2 {
+      font-family: 'Pacifico', cursive;
+      font-size: clamp(1.8rem, 8vw, 2.2rem);
+      color: var(--primary);
+      margin-bottom: 15px;
+    }
+
+    .bye-screen p {
+      font-size: 1.1rem;
+      color: #666;
+      line-height: 1.6;
+      padding: 0 10px;
+    }
+
+    .heart-beat {
+      display: inline-block;
+      animation: heartbeat 1s infinite;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      25% { transform: scale(1.2); }
+      50% { transform: scale(1); }
+      75% { transform: scale(1.2); }
+    }
+
+    /* No Button Reaction Popup */
+    .no-reaction-popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      background: var(--white);
+      padding: 25px;
+      border-radius: 25px;
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+      z-index: 2000;
+      text-align: center;
+      max-width: 340px;
+      width: 90%;
+      animation: no-popup-appear 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    @keyframes no-popup-appear {
+      0% {
+        transform: translate(-50%, -50%) scale(0) rotate(-10deg);
+        opacity: 0;
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+        opacity: 1;
+      }
+    }
+
+    .no-reaction-popup.hide {
+      animation: no-popup-out 0.3s ease-out forwards;
+    }
+
+    @keyframes no-popup-out {
+      0% {
+        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(0) rotate(10deg);
+        opacity: 0;
+      }
+    }
+
+    .no-reaction-popup img {
+      width: 260px;
+      height: 260px;
+      object-fit: cover;
+      border-radius: 20px;
+      margin-bottom: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .no-reaction-popup h3 {
+      font-family: 'Pacifico', cursive;
+      font-size: 1.5rem;
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+
+    .no-reaction-popup p {
+      font-size: 1rem;
+      color: #666;
+      line-height: 1.4;
+      margin-bottom: 15px;
+    }
+
+    .no-reaction-close {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 25px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: transform 0.2s;
+    }
+
+    .no-reaction-close:hover {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body class="noselect">
+  <!-- Start Overlay -->
+  <div class="start-overlay" id="startOverlay">
+    <div class="start-text">Welcome My Love! 💕</div>
+    <button class="start-btn" onclick="startExperience()">💝 Click to Start 💝</button>
+  </div>
+
+  <!-- Floating Hearts Background -->
+  <div class="hearts-bg" id="heartsBg"></div>
+  
+  <!-- Confetti Canvas -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Main Container -->
+  <div class="container" id="mainContainer">
+    <!-- Cute Cat GIF -->
+    <div class="cat-gif">
+      <img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" alt="Cute Dancing Cat" id="catGif">
+    </div>
+
+    <h1>Will you be my Valentine, Kadambari? <span class="heart-beat">💕</span></h1>
+    <p class="subtitle">You're the most special person in my world! 🌟</p>
+
+    <div class="button-zone" id="buttonZone">
+      <button id="yesBtn">Yes! 💝</button>
+      <button id="noBtn">No</button>
+    </div>
+
+    <div class="stats" id="stats">
+      "No" has escaped <span class="attempts" id="attemptCount">0</span> times! 😅
+    </div>
+
+    <div class="touch-hint">Tap "No" if you dare... 😉</div>
+
+    <!-- Success Screen -->
+    <div class="success-screen" id="successScreen">
+      <div class="happi-container">
+        <div class="happi-cat">🐱</div>
+        <img src="image3(1).png" alt="Happy" class="happi-image">
+      </div>
+      <h2>Happi Happi Happi! 🎉</h2>
+      <p class="gift-message">You get gifts for pressing Yes and being my Valentine! 🎁</p>
+      
+      <div class="gift-boxes">
+        <div class="gift-box" id="gift1" onclick="openGift(1)">🎁</div>
+        <div class="gift-box disabled" id="gift2" onclick="openGift(2)">🎁</div>
+        <div class="gift-box disabled" id="gift3" onclick="openGift(3)">🎁</div>
+      </div>
+    </div>
+
+    <!-- Bye Screen -->
+    <div class="bye-screen" id="byeScreen">
+      <div class="bye-cat">
+        <img src="https://media.giphy.com/media/4N1wOi78ZGzSB6H7vK/giphy.gif" alt="Cat Kiss">
+      </div>
+      <h2>Bye Bye, My Love! 💋</h2>
+      <p>Thank you for being my Valentine!<br>You're the best thing that ever happened to me! <span class="heart-beat">💖</span><br>See you soon, Kadambari! 😘<br>I love you forever! 💕</p>
+    </div>
+  </div>
+
+  <script>
+    // Initialize elements
+    const yesBtn = document.getElementById('yesBtn');
+    const noBtn = document.getElementById('noBtn');
+    const buttonZone = document.getElementById('buttonZone');
+    const stats = document.getElementById('stats');
+    const attemptCount = document.getElementById('attemptCount');
+    const heartsBg = document.getElementById('heartsBg');
+    const mainContainer = document.getElementById('mainContainer');
+    const successScreen = document.getElementById('successScreen');
+    const byeScreen = document.getElementById('byeScreen');
+    const startOverlay = document.getElementById('startOverlay');
+    
+    let attempts = 0;
+    let yesScale = 1;
+    let isGameActive = true;
+    let bgmPlaying = false;
+    let currentGift = 1;
+    let bgmInterval;
+    let happiInterval;
+    let noPressCount = 0;
+
+    // Audio elements
+    let faaaahAudio = new Audio('faaaah.mp3');
+    let bgmAudio = new Audio('romantic-bgm.mp3');
+    let happiAudio = new Audio('happi.mp3');
+
+    // No button reaction data - alternating images
+    const noReactionData = [
+      {
+        image: 'image2(1).png',
+        title: "Why did you press No? 💔",
+        message: "My heart is breaking... please say yes! 🥺"
+      },
+      {
+        image: 'image1.png',
+        title: "Puppy eyes activated! 🥺",
+        message: "Look at this face... how could you say no? 💕"
+      }
+    ];
+
+    // Gift data with your 3 images
+    const giftData = [
+      {
+        image: 'IMG-20241012-WA0109.jpg',
+        title: 'Gift 1: Unlimited Love! 💕',
+        message: 'You get unlimited hugs, kisses, and cuddles from me! Forever and always! 🤗💋'
+      },
+      {
+        image: 'IMG-20241031-WA0052.jpg',
+        title: 'Gift 2: Movie Date! 🎬',
+        message: 'You get a special movie date with me! Popcorn, cuddles, and lots of love! 🍿💑'
+      },
+      {
+        image: 'IMG-20241031-WA0045.jpg',
+        title: 'Gift 3: Forever Together! 💍',
+        message: 'You get my heart, my soul, and my forever! I love you, Kadambari! 💖✨'
+      }
+    ];
+
+    // Start experience with BGM
+    function startExperience() {
+      startOverlay.style.opacity = '0';
+      setTimeout(() => {
+        startOverlay.style.display = 'none';
+      }, 500);
+      
+      // Play BGM
+      bgmAudio.loop = true;
+      bgmAudio.volume = 0.3;
+      bgmAudio.play().catch(e => console.log('BGM autoplay blocked'));
+      
+      bgmPlaying = true;
+    }
+
+    // Play faaaah sound
+    function playFaaaahSound() {
+      faaaahAudio.currentTime = 0;
+      faaaahAudio.volume = 0.5;
+      faaaahAudio.play().catch(e => console.log('Audio play failed'));
+    }
+
+    // Play happi sound
+    function playHappiSound() {
+      happiAudio.currentTime = 0;
+      happiAudio.volume = 0.5;
+      happiAudio.play().catch(e => console.log('Audio play failed'));
+    }
+
+    // Show No button reaction popup
+    function showNoReactionPopup() {
+      noPressCount++;
+      const dataIndex = (noPressCount - 1) % 2; // Alternate between 0 and 1
+      const data = noReactionData[dataIndex];
+      
+      // Create overlay
+      const overlay = document.createElement('div');
+      overlay.className = 'overlay';
+      document.body.appendChild(overlay);
+      
+      // Create popup
+      const popup = document.createElement('div');
+      popup.className = 'no-reaction-popup';
+      popup.innerHTML = `
+        <img src="${data.image}" alt="Reaction">
+        <h3>${data.title}</h3>
+        <p>${data.message}</p>
+        <button class="no-reaction-close" onclick="closeNoReactionPopup()">Try Again 💝</button>
+      `;
+      document.body.appendChild(popup);
+      
+      // Pause game
+      isGameActive = false;
+    }
+
+    // Close No reaction popup
+    window.closeNoReactionPopup = function() {
+      const popup = document.querySelector('.no-reaction-popup');
+      const overlay = document.querySelector('.overlay');
+      
+      if (popup) {
+        popup.classList.add('hide');
+        overlay.classList.add('hide');
+        
+        setTimeout(() => {
+          popup.remove();
+          overlay.remove();
+          isGameActive = true;
+        }, 300);
+      }
+    };
+
+    // Create floating hearts
+    function createFloatingHearts() {
+      const heartSymbols = ['💕', '💖', '💗', '💓', '💝', '💘', '💞'];
+      for (let i = 0; i < 15; i++) {
+        const heart = document.createElement('div');
+        heart.className = 'floating-heart';
+        heart.innerHTML = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+        heart.style.left = Math.random() * 100 + '%';
+        heart.style.animationDuration = (Math.random() * 4 + 8) + 's';
+        heart.style.animationDelay = Math.random() * 5 + 's';
+        heart.style.fontSize = (Math.random() * 15 + 18) + 'px';
+        heartsBg.appendChild(heart);
+      }
+    }
+    createFloatingHearts();
+
+    // Confetti setup
+    const canvas = document.getElementById('confetti-canvas');
+    const confettiInstance = confetti.create(canvas, {
+      resize: true,
+      useWorker: false
+    });
+
+    function launchConfetti() {
+      confettiInstance({
+        particleCount: 150,
+        spread: 100,
+        origin: { y: 0.6 },
+        colors: ['#ff3b7a', '#ff8fab', '#ffd6e7', '#fff', '#ff1744', '#fdcb6e'],
+        disableForReducedMotion: true,
+        zIndex: 1000
+      });
+    }
+
+    // Haptic feedback
+    function vibrate(pattern) {
+      if (navigator.vibrate) {
+        navigator.vibrate(pattern);
+      }
+    }
+
+    // Get random position within button zone
+    function getRandomPosition() {
+      const zoneRect = buttonZone.getBoundingClientRect();
+      const noRect = noBtn.getBoundingClientRect();
+      
+      const padding = 20;
+      const maxX = zoneRect.width - noRect.width - padding * 2;
+      const maxY = zoneRect.height - noRect.height - padding * 2;
+      
+      return {
+        x: padding + Math.random() * maxX,
+        y: padding + Math.random() * maxY
+      };
+    }
+
+    // Move "No" button
+    function moveNoButton(e) {
+      if (!isGameActive) return;
+      
+      // Play faaaah sound
+      playFaaaahSound();
+      
+      attempts++;
+      attemptCount.textContent = attempts;
+      stats.classList.add('visible');
+      
+      vibrate(50);
+      
+      const newPos = getRandomPosition();
+      
+      noBtn.style.position = 'absolute';
+      noBtn.style.left = newPos.x + 'px';
+      noBtn.style.top = newPos.y + 'px';
+      noBtn.classList.add('jumping');
+      
+      yesScale = Math.min(1.5, 1 + (attempts * 0.1));
+      yesBtn.style.transform = `scale(${yesScale})`;
+      
+      const texts = ['No', 'Really? 😢', 'Think again! 💭', 'Are you sure? 🤔', 'Pretty please? 🥺', 'Last chance! ⚠️', 'Nope! ❌', 'Give up! 🏳️', 'Okay... 😭', '💔'];
+      const textIndex = Math.min(Math.floor(attempts / 2), texts.length - 1);
+      noBtn.textContent = texts[textIndex];
+      
+      const scale = Math.max(0.6, 1 - (attempts * 0.04));
+      noBtn.style.transform = `scale(${scale})`;
+      
+      setTimeout(() => {
+        noBtn.classList.remove('jumping');
+      }, 400);
+      
+      // Show reaction popup with alternating images
+      setTimeout(() => {
+        showNoReactionPopup();
+      }, 300);
+      
+      if (attempts >= 10) {
+        noBtn.textContent = 'Fine... Yes! 💝';
+        noBtn.style.background = 'linear-gradient(135deg, #ff3b7a 0%, #ff1f68 100%)';
+        noBtn.style.color = 'white';
+        noBtn.onclick = triggerYes;
+      }
+    }
+
+    // Handle No button
+    noBtn.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      moveNoButton(e);
+    }, { passive: false });
+
+    noBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      moveNoButton(e);
+    });
+
+    noBtn.addEventListener('mouseenter', () => {
+      if (attempts > 0) moveNoButton();
+    });
+
+    // Yes button functionality
+    function triggerYes() {
+      if (!isGameActive) return;
+      isGameActive = false;
+      bgmPlaying = false;
+      
+      // Stop BGM
+      bgmAudio.pause();
+      
+      playHappiSound();
+      vibrate([100, 50, 100, 50, 200]);
+      
+      // Hide main elements
+      buttonZone.style.display = 'none';
+      stats.style.display = 'none';
+      document.querySelector('.touch-hint').style.display = 'none';
+      document.querySelector('h1').style.display = 'none';
+      document.querySelector('.subtitle').style.display = 'none';
+      document.querySelector('.cat-gif').style.display = 'none';
+      
+      // Show success screen
+      successScreen.style.display = 'block';
+      launchConfetti();
+      
+      // Play happi sound loop
+      happiInterval = setInterval(() => {
+        if (successScreen.style.display === 'block' && !document.querySelector('.gift-reveal')) {
+          playHappiSound();
+        }
+      }, 2500);
+    }
+
+    yesBtn.addEventListener('click', triggerYes);
+    yesBtn.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      triggerYes();
+    }, { passive: false });
+
+    // Open gift boxes
+    window.openGift = function(giftNum) {
+      if (giftNum !== currentGift) return;
+      
+      const data = giftData[giftNum - 1];
+      
+      // Mark current box as opened
+      const box = document.getElementById(`gift${giftNum}`);
+      box.classList.add('opened');
+      box.innerHTML = '✨';
+      
+      // Show gift reveal
+      const overlay = document.createElement('div');
+      overlay.className = 'overlay';
+      document.body.appendChild(overlay);
+      
+      const popup = document.createElement('div');
+      popup.className = 'gift-reveal';
+      popup.innerHTML = `
+        <img src="${data.image}" alt="Gift ${giftNum}">
+        <h3>${data.title}</h3>
+        <p>${data.message}</p>
+      `;
+      document.body.appendChild(popup);
+      
+      launchConfetti();
+      playHappiSound();
+      
+      // Enable next gift
+      currentGift++;
+      
+      if (currentGift <= 3) {
+        // Close current and open next after delay
+        setTimeout(() => {
+          popup.classList.add('hide');
+          overlay.classList.add('hide');
+          
+          setTimeout(() => {
+            popup.remove();
+            overlay.remove();
+            
+            // Enable next box
+            const nextBox = document.getElementById(`gift${currentGift}`);
+            nextBox.classList.remove('disabled');
+            
+            // Auto open next gift after 5 seconds
+            setTimeout(() => {
+              if (currentGift <= 3 && successScreen.style.display === 'block') {
+                openGift(currentGift);
+              }
+            }, 5000);
+            
+          }, 300);
+        }, 4000);
+      } else {
+        // All gifts opened - show bye screen after delay
+        setTimeout(() => {
+          popup.classList.add('hide');
+          overlay.classList.add('hide');
+          
+          setTimeout(() => {
+            popup.remove();
+            overlay.remove();
+            showByeScreen();
+          }, 300);
+        }, 4000);
+      }
+    };
+
+    // Show bye screen
+    function showByeScreen() {
+      clearInterval(happiInterval);
+      successScreen.style.display = 'none';
+      byeScreen.style.display = 'block';
+      
+      // Final celebration
+      launchConfetti();
+      playHappiSound();
+      
+      // Continuous confetti
+      setInterval(launchConfetti, 2000);
+    }
+
+    // Prevent pull-to-refresh
+    document.body.addEventListener('touchmove', (e) => {
+      if (e.target === document.body || e.target === heartsBg) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+
+    // Prevent zoom on double tap
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', (e) => {
+      const now = Date.now();
+      if (now - lastTouchEnd <= 300) {
+        e.preventDefault();
+      }
+      lastTouchEnd = now;
+    }, false);
+
+    // Initial hint
+    setTimeout(() => {
+      noBtn.style.animation = 'shake 0.5s ease-in-out';
+      setTimeout(() => {
+        noBtn.style.animation = '';
+      }, 500);
+    }, 1500);
+  </script>
+</body>
+</html>
